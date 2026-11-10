@@ -243,6 +243,15 @@
   body.telao-capa #telaoContainer > header img.logo { max-width: 560px !important; }
   body.telao-capa #telaoContainer > header h1 { font-size: 3.4rem; }
   body.telao-capa #telaoContainer > header p { font-size: 1.6rem; }
+  .aguardando { display: inline-flex; flex-direction: column; align-items: center; gap: 18px; }
+  .spinner {
+    width: 64px; height: 64px; border-radius: 50%;
+    border: 5px solid rgba(255,255,255,0.15);
+    border-top-color: var(--accent-gold);
+    animation: girar 1s linear infinite;
+  }
+  .aguardando-txt { font-size: 1.1rem; font-weight: 500; letter-spacing: 4px; text-transform: uppercase; color: rgba(245,239,221,0.7); }
+  @keyframes girar { to { transform: rotate(360deg); } }
   #telaoTemasLista ol { list-style: none; padding: 0; margin: 16px 0 0; text-align: left; display: inline-block; }
   #telaoTemasLista li { font-size: 1.6rem; font-weight: 600; color: #fff; padding: 10px 0; border-bottom: 1px solid rgba(200,168,75,0.3); }
   #telaoTemasLista li:last-child { border-bottom: none; }
@@ -569,7 +578,7 @@
   <div class="panel telao-wrap">
     <div class="telao-main">
       <div class="sublabel" id="telaoStatusLabel">Aguardando início do sorteio</div>
-      <div class="display" id="telaoDisplay">—</div>
+      <div class="display" id="telaoDisplay"><span class="aguardando"><span class="spinner"></span><span class="aguardando-txt">Aguardando</span></span></div>
       <div class="tema-bloco" id="telaoTemaBloco" style="display:none;"><div class="sublabel">Tema da prova didática</div><div class="tema-texto" id="telaoTemaTexto"></div></div>
       <div id="telaoTemasLista" style="display:none;"><div class="sublabel">Temas da prova didática</div><ol></ol></div>
     </div>
@@ -686,6 +695,8 @@ function aplicarEstadoRemoto(snap) {
   renderPendentes();
   if (isTelao) { atualizarCapaTelao(); renderTelao(snap.tipo); }
 }
+
+const AGUARDANDO_HTML = '<span class="aguardando"><span class="spinner"></span><span class="aguardando-txt">Aguardando</span></span>';
 
 function atualizarCapaTelao() {
   const capa = !chamadaConfirmada;
@@ -1088,22 +1099,22 @@ function renderTelao(tipo) {
   } else if (tipo === 'chamada_confirmada') {
     statusEl.textContent = 'Chamada confirmada — sorteio iniciando';
     pararSpinTelao();
-    displayEl.textContent = '—';
+    displayEl.innerHTML = AGUARDANDO_HTML;
   } else if (tipo === 'fase_tema_iniciada') {
     statusEl.textContent = 'Ordem sorteada — aguardando sorteio do tema da prova didática';
     pararSpinTelao();
-    displayEl.textContent = '—';
+    displayEl.innerHTML = AGUARDANDO_HTML;
   } else if (tipo === 'sorteando_tema') {
     statusEl.textContent = 'Sorteando tema da prova didática...';
     iniciarSpinTelao(displayEl, temasDisponiveis);
   } else if (tipo === 'sorteio_totalmente_concluido') {
     statusEl.textContent = 'Sorteio concluído';
     pararSpinTelao();
-    displayEl.textContent = '—';
+    displayEl.innerHTML = AGUARDANDO_HTML;
   } else {
     statusEl.textContent = 'Aguardando início do sorteio';
     pararSpinTelao();
-    displayEl.textContent = '—';
+    displayEl.innerHTML = AGUARDANDO_HTML;
   }
 }
 
