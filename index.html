@@ -229,6 +229,9 @@
     column-gap: 36px;
   }
   body.modo-telao #telaoContainer > header { grid-area: cab; }
+  #telaoTemasLista ol { list-style: none; padding: 0; margin: 16px 0 0; text-align: left; display: inline-block; }
+  #telaoTemasLista li { font-size: 1.6rem; font-weight: 600; color: #fff; padding: 10px 0; border-bottom: 1px solid rgba(200,168,75,0.3); }
+  #telaoTemasLista li:last-child { border-bottom: none; }
   body.modo-telao #telaoContainer .telao-wrap { display: contents; }
   body.modo-telao #telaoContainer .telao-main { grid-area: sorteio; }
   body.modo-telao #telaoContainer .telao-sidebar { grid-area: lado; align-self: start; padding-top: 10px; }
@@ -554,6 +557,7 @@
       <div class="sublabel" id="telaoStatusLabel">Aguardando início do sorteio</div>
       <div class="display" id="telaoDisplay">—</div>
       <div class="tema-bloco" id="telaoTemaBloco" style="display:none;"><div class="sublabel">Tema da prova didática</div><div class="tema-texto" id="telaoTemaTexto"></div></div>
+      <div id="telaoTemasLista" style="display:none;"><div class="sublabel">Temas da prova didática</div><ol></ol></div>
     </div>
     <div class="telao-sidebar">
       <h2 style="color:var(--accent-gold); font-size:1rem;">Ordem confirmada</h2>
@@ -1035,6 +1039,19 @@ function renderTelao(tipo) {
   }
   blocoEl.style.display = 'none';
   textoEl.textContent = '';
+  const listaEl = document.getElementById('telaoTemasLista');
+  if (faseTema && tipo !== 'sorteando_tema') {
+    pararSpinTelao();
+    displayEl.style.display = 'none';
+    const temas = temasDisponiveis.length ? temasDisponiveis : TEMAS_PADRAO;
+    listaEl.querySelector('ol').innerHTML = temas.map(t => '<li>' + t + '</li>').join('');
+    if (listaEl.style.display === 'none') {
+      listaEl.style.display = 'block';
+      retrigger(listaEl, 'fade-in');
+    }
+    return;
+  }
+  listaEl.style.display = 'none';
   displayEl.style.display = '';
   displayEl.classList.toggle('display-tema', tipo === 'sorteando_tema');
   if (tipo === 'sorteio_iniciado') {
