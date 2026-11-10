@@ -784,12 +784,12 @@ function retrigger(el, className) {
 function animarSlot(displayEl, finalValue, options, onDone) {
   if (!displayEl) { if (onDone) onDone(); return; }
   const boxEl = displayEl.closest('.roleta-box') || displayEl.closest('.telao-main');
-  const ticks = 10;
+  const ticks = 14;
   let i = 0;
   function passo() {
     const t = i / ticks;
     const eased = 1 - Math.pow(1 - t, 3); // ease-out cúbico
-    const delay = 30 + eased * 110; // acelera no início (30ms), desacelera no fim (~140ms)
+    const delay = 40 + eased * 160; // acelera no início (40ms), desacelera no fim (~200ms)
     setTimeout(() => {
       i++;
       if (i >= ticks) {
